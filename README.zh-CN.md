@@ -28,32 +28,21 @@
 
 ## 用 Rumi 做什么
 
-<table>
-<tr>
-<td width="50%" valign="top">
-<h3>打开论文，就能读</h3>
-<p>拖入 PDF，或粘贴 arXiv 链接。在原生 Mac 界面里阅读、查找和翻页，本地论文离线也能看。</p>
-<p><sub>PDF 与文件夹导入 · arXiv · ⌘O</sub></p>
-</td>
-<td width="50%" valign="top">
-<h3>需要哪页，翻译哪页</h3>
-<p>接入自己的 API，选好目标语言和页码。现在翻译，或先读原文，稍后继续。</p>
-<img src="docs/rumi/images/translate-action.png" width="232" alt="Rumi 界面中的再次翻译按钮" />
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<h3>原文译文，随时对照</h3>
-<p>在同一个阅读空间切换原文、译文和双语 PDF。需要保存或分享时，直接导出对应版本。</p>
-<p><sub>原文 · 译文 · 双语 · 导出</sub></p>
-</td>
-<td width="50%" valign="top">
-<h3>服务和模型，你来选</h3>
-<p>使用 DeepSeek 或 OpenAI 兼容服务。密钥保存在 macOS 钥匙串，无需注册 Rumi 账户或订阅。</p>
-<p><sub>App 免费 · API 由你的服务商计费</sub></p>
-</td>
-</tr>
-</table>
+### <img src="docs/rumi/images/native-import.png" width="32" height="32" alt="" /> 导入就能读
+
+拖入 PDF，或粘贴 arXiv 链接。本地阅读与查找，离线也可用。
+
+### <img src="docs/rumi/images/native-translate.png" width="32" height="32" alt="" /> 按需翻译
+
+选好语言和页码，使用自己的 API 翻译需要的内容。
+
+### <img src="docs/rumi/images/native-compare.png" width="32" height="32" alt="" /> 随时对照
+
+原文、译文、双语 PDF 随时切换，按需导出对应版本。
+
+### <img src="docs/rumi/images/native-service.png" width="32" height="32" alt="" /> 服务自己选
+
+接入 DeepSeek 或 OpenAI 兼容服务，密钥保存在 macOS 钥匙串。
 
 为 **Apple Silicon** 打造，支持 **简体中文与英文** 界面。内置翻译引擎，无需安装 Python。
 

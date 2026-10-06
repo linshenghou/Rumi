@@ -28,32 +28,21 @@
 
 ## What you can do
 
-<table>
-<tr>
-<td width="50%" valign="top">
-<h3>Read without the setup</h3>
-<p>Drop in a PDF or paste an arXiv link. Read, search and navigate your paper in a native Mac app. Local reading works offline.</p>
-<p><sub>PDF &amp; folder import · arXiv · ⌘O</sub></p>
-</td>
-<td width="50%" valign="top">
-<h3>Translate on your terms</h3>
-<p>Connect your own API, choose a language and select the pages you need. Translate now, or return to it later.</p>
-<img src="docs/rumi/images/translate-action.png" width="232" alt="The Translate Again button in Rumi" />
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<h3>Keep the original close</h3>
-<p>Switch between original, translated and bilingual PDFs in the same workspace. Export the version you want to keep.</p>
-<p><sub>Original · Translated · Bilingual · Export</sub></p>
-</td>
-<td width="50%" valign="top">
-<h3>Bring your own API</h3>
-<p>Use DeepSeek or an OpenAI-compatible service. Keys stay in macOS Keychain. No Rumi account or subscription.</p>
-<p><sub>Free app · Your provider bills API usage</sub></p>
-</td>
-</tr>
-</table>
+### <img src="docs/rumi/images/native-import.png" width="32" height="32" alt="" /> Import a paper
+
+Drop in a PDF or paste an arXiv link. Read and search locally, even offline.
+
+### <img src="docs/rumi/images/native-translate.png" width="32" height="32" alt="" /> Translate what you need
+
+Choose your language and pages, then translate with your own API.
+
+### <img src="docs/rumi/images/native-compare.png" width="32" height="32" alt="" /> Keep both versions close
+
+Switch between original, translated and bilingual PDFs. Export any version.
+
+### <img src="docs/rumi/images/native-service.png" width="32" height="32" alt="" /> Choose your API
+
+Use DeepSeek or an OpenAI-compatible service. Keys stay in macOS Keychain.
 
 Built for **Apple Silicon**, with an **English and 简体中文** interface. The translation engine is bundled; you don't need to install Python.
 
