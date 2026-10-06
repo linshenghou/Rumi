@@ -81,6 +81,7 @@ struct SettingsView: View {
                         if model.serviceBusy { ProgressView().controlSize(.small) }
                         Spacer()
                         Menu("Import Configuration") {
+                            Button("Import Key from Previous App") { importPreviousKey() }
                             Button("Import Existing pdf2zh Configuration") { importConfig() }
                             Button("Choose Configuration File…") {
                                 let panel = NSOpenPanel()
