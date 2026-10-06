@@ -11,10 +11,10 @@ concurrency:
   cancel-in-progress: true
 jobs:
   desktop:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.4.1.app/Contents/Developer
     steps:
       - uses: actions/checkout@v6
         with:

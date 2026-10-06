@@ -21,7 +21,7 @@ Rumi 面向 Apple Silicon、macOS 14 或更新系统。应用内阅读 PDF，确
 
 ## 独立社区 Beta
 
-构建机需要 Apple Silicon、完整的 Xcode 26 或更新版本（提供分层图标编译器 `actool`）、Python 3.11+ 和 [uv](https://docs.astral.sh/uv/)。首次构建需要联网下载固定的 CPython 3.13.11 与 hash 锁定依赖；所有构建环境位于 `macos/.build/`。运行时不依赖 uv、Homebrew、开发机 venv 或 checkout。
+构建机需要 Apple Silicon、macOS 26 及完整的 Xcode 26.4.1 或更新版本（提供分层图标编译器 `actool`）、Python 3.11+ 和 [uv](https://docs.astral.sh/uv/)。首次构建需要联网下载固定的 CPython 3.13.11 与 hash 锁定依赖；所有构建环境位于 `macos/.build/`。运行时不依赖 uv、Homebrew、开发机 venv 或 checkout。
 
 ```sh
 python3 macos/scripts/build_app.py --dmg

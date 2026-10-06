@@ -4,7 +4,7 @@ English and Chinese contributions are welcome. Read the [code of conduct](CODE_O
 
 ## Development
 
-Rumi targets Apple Silicon and macOS 14+. Build on Apple Silicon with Xcode 26+ (the layered icon compiler), Python 3.11+ and uv. Follow [English build instructions](docs/rumi/BUILD.md) or [中文构建说明](macos/README.md) for pinned engine setup. Swift tests need no API key. Python bridge tests run in the isolated desktop environment with pytest installed separately.
+Rumi targets Apple Silicon and macOS 14+. Build on Apple Silicon with macOS 26+ and Xcode 26.4.1+ (the layered icon compiler), Python 3.11+ and uv. Follow [English build instructions](docs/rumi/BUILD.md) or [中文构建说明](macos/README.md) for pinned engine setup. Swift tests need no API key. Python bridge tests run in the isolated desktop environment with pytest installed separately.
 
 ```sh
 swift test --disable-sandbox --package-path macos

@@ -1,6 +1,6 @@
 # Build Rumi from source
 
-Use an Apple Silicon Mac, macOS 14+, full Xcode 26+ selected via `xcode-select`, Python 3.11+ and [uv](https://docs.astral.sh/uv/). Building needs network access to fetch the pinned CPython runtime, hash-locked packages, model/font assets and corresponding dependency sources. Running the installed app does not need Python or a model download.
+Use an Apple Silicon build host with macOS 26+, full Xcode 26.4.1+ selected via `xcode-select`, Python 3.11+ and [uv](https://docs.astral.sh/uv/). The built app still targets macOS 14+. Building needs network access to fetch the pinned CPython runtime, hash-locked packages, model/font assets and corresponding dependency sources. Running the installed app does not need Python or a model download.
 
 Clone the repository (or extract the matching complete source archive). The desktop engine keeps the upstream Python package name/version. `macos/Sources/PDFTranslate/Resources/Release.json` is the independent Rumi product version/build/channel/identity source.
 

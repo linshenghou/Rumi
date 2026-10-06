@@ -1,7 +1,7 @@
 {
   "product": "Rumi",
   "version": "0.3.0",
-  "build": "5",
+  "build": "6",
   "channel": "beta",
   "beta": 1,
   "owner": "linshenghou",
