@@ -11,8 +11,11 @@ import pytest
 SCRIPTS = Path(__file__).resolve().parents[1] / "macos/scripts"
 sys.path.insert(0, str(SCRIPTS))
 import audit_source  # noqa: E402
+import collect_resources  # noqa: E402
 import draft_release  # noqa: E402
+import native_inventory  # noqa: E402
 import release_metadata  # noqa: E402
+import release_source  # noqa: E402
 
 
 def test_release_identity_and_artifacts_use_one_version():
@@ -21,6 +24,79 @@ def test_release_identity_and_artifacts_use_one_version():
     assert info["bundle_id"] == f"io.github.{info['owner'].lower()}.rumi"
     assert info["label"] in info["source_name"] and info["label"] in info["dmg_name"]
     assert info["tag"] == "v" + info["label"]
+
+
+@pytest.mark.parametrize("license_value", [None, "UNKNOWN"])
+def test_build_hook_source_is_included_without_license_metadata(license_value):
+    assert release_source.needs_corresponding_source(
+        {"name": "pyinstaller-hooks-contrib", "license": license_value}
+    )
+
+
+def test_copyleft_classifiers_are_not_lost():
+    assert release_source.needs_corresponding_source(
+        {
+            "name": "fixture",
+            "license": None,
+            "license_classifiers": [
+                "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)"
+            ],
+        }
+    )
+
+
+def test_unowned_native_dependency_is_rejected(tmp_path):
+    with pytest.raises(RuntimeError, match="Unowned native"):
+        native_inventory.owner_for_path(
+            tmp_path / "unknown.dylib", {}, tmp_path / "python"
+        )
+
+
+def test_license_override_requires_matching_version_and_notice(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    notice = tmp_path / "LICENSE"
+    notice.write_text("reviewed license fixture")
+    review = [
+        {
+            "name": "fixture",
+            "version": "1",
+            "license": "MIT",
+            "files": [
+                {
+                    "path": "LICENSE",
+                    "sha256": hashlib.sha256(notice.read_bytes()).hexdigest(),
+                }
+            ],
+        }
+    ]
+    (tmp_path / "license-overrides.json").write_text(json.dumps(review))
+    monkeypatch.setattr(collect_resources, "PACKAGING", tmp_path)
+    distribution = SimpleNamespace(
+        metadata={"Name": "fixture"}, version="1", locate_file=lambda p: tmp_path / p
+    )
+    assert collect_resources.reviewed_license(distribution) == (
+        "MIT",
+        "reviewed-notice",
+    )
+    notice.write_text("changed grant")
+    with pytest.raises(RuntimeError, match="Reviewed license changed"):
+        collect_resources.reviewed_license(distribution)
+    distribution.version = "2"
+    with pytest.raises(RuntimeError, match="Re-review license"):
+        collect_resources.reviewed_license(distribution)
+
+
+def test_new_package_without_license_requires_review(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    (tmp_path / "license-overrides.json").write_text("[]")
+    monkeypatch.setattr(collect_resources, "PACKAGING", tmp_path)
+    distribution = SimpleNamespace(
+        metadata={"Name": "new-package", "License": "UNKNOWN"}
+    )
+    with pytest.raises(RuntimeError, match="Missing license review"):
+        collect_resources.reviewed_license(distribution)
 
 
 @pytest.mark.parametrize(

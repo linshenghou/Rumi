@@ -1,0 +1,10 @@
+{
+  "file": "doclayout_yolo_docstructbench_imgsz1024.onnx",
+  "sha256": "fece9af02f618b603ff7921ccec6861d13e7e1f9830e091dfb7e8ad9311e5b21",
+  "source": "https://huggingface.co/wybxc/DocLayout-YOLO-DocStructBench-onnx/resolve/ee7c3d744e5c47c58e267044ac825f95abe69653/doclayout_yolo_docstructbench_imgsz1024.onnx",
+  "license": "Apache-2.0",
+  "base_model": "juliozhao/DocLayout-YOLO-DocStructBench",
+  "base_revision": "8c3299a30b8ff29a1503c4431b035b93220f7b11",
+  "base_license": "Apache-2.0",
+  "note": "The publisher identifies the original weights as Apache-2.0. The DocLayout-YOLO code repository has separate AGPL terms, retained in the notices. This records published grants, not a warranty about training-data rights."
+}

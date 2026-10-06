@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import shutil
 import subprocess
 import tarfile
 from pathlib import Path
@@ -18,6 +19,19 @@ from release_metadata import git
 from release_metadata import load_release
 
 
+def needs_corresponding_source(item):
+    evidence = " ".join(
+        [item.get("license") or "", *item.get("license_classifiers", [])]
+    ).lower()
+    return any(term in evidence for term in ("gpl", "mpl")) or item["name"].lower() in {
+        "pymupdf",
+        "babeldoc",
+        "levenshtein",
+        "pyinstaller",
+        "pyinstaller-hooks-contrib",
+    }
+
+
 def collect_dependency_sources():
     destination = BUILD / "dependency-sources"
     destination.mkdir(parents=True, exist_ok=True)
@@ -25,14 +39,7 @@ def collect_dependency_sources():
     entries = []
     for item in distributions:
         # Include corresponding upstream source for every copyleft runtime/tool.
-        if not any(
-            term in (item.get("license") or "").lower() for term in ("gpl", "mpl")
-        ) and item["name"].lower() not in {
-            "pymupdf",
-            "babeldoc",
-            "levenshtein",
-            "pyinstaller",
-        }:
+        if not needs_corresponding_source(item):
             continue
         name, version = item["name"], item["version"]
         metadata_file = destination / f"{name}-{version}.pypi.json"
@@ -80,6 +87,15 @@ def collect_dependency_sources():
             "sha256": mupdf_sha256,
         }
     )
+    # Complete sources and the tracked patch/build recipe accompany our custom
+    # image-only OpenCV wheel; the PyPI wheel's hash is not its provenance.
+    opencv = PROJECT / "macos/.build/opencv"
+    for source in json.loads((opencv / "manifest.json").read_text())["sources"]:
+        original = opencv / source["file"]
+        if digest(original, "sha256") != source["sha256"]:
+            raise RuntimeError("OpenCV corresponding source checksum mismatch")
+        shutil.copyfile(original, destination / source["file"])
+        entries.append({key: value for key, value in source.items() if key != "root"})
     (destination / "manifest.json").write_text(json.dumps(entries, indent=2) + "\n")
     return destination
 
@@ -136,6 +152,10 @@ def create_source_archive(output: Path, include_dependencies=True):
         archive.add(
             BUILD / "dist/pdftranslate-engine/build-manifest.json",
             arcname="Rumi-source/engine-build.json",
+        )
+        archive.add(
+            BUILD / "dist/pdftranslate-engine/native-inventory.json",
+            arcname="Rumi-source/native-inventory.json",
         )
         if dependencies:
             entries = json.loads((dependencies / "manifest.json").read_text())

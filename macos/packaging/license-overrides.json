@@ -1,0 +1,90 @@
+[
+  {
+    "name": "freetype-py",
+    "version": "2.5.1",
+    "license": "BSD-3-Clause",
+    "scope": "Python distribution only; native libraries require separate review.",
+    "files": [
+      {
+        "path": "freetype_py-2.5.1.dist-info/LICENSE.txt",
+        "sha256": "60386caf4d85fb57b5cc5470f1a00de1692fb28e8b731f7f9187f64451dbe641"
+      }
+    ]
+  },
+  {
+    "name": "Jinja2",
+    "version": "3.1.6",
+    "license": "BSD-3-Clause",
+    "scope": "Python distribution only; native libraries require separate review.",
+    "files": [
+      {
+        "path": "jinja2-3.1.6.dist-info/licenses/LICENSE.txt",
+        "sha256": "3b49dcee4105eb37bac10faf1be260408fe85d252b8e9df2e0979fc1e094437b"
+      }
+    ]
+  },
+  {
+    "name": "markdown-it-py",
+    "version": "4.2.0",
+    "license": "MIT",
+    "scope": "Python distribution only; native libraries require separate review.",
+    "files": [
+      {
+        "path": "markdown_it_py-4.2.0.dist-info/licenses/LICENSE",
+        "sha256": "4a2260d6e2cd0f5a151a1e86dbfe7d3ed552b1e2beabf9941c1ba5c49cbce484"
+      },
+      {
+        "path": "markdown_it_py-4.2.0.dist-info/licenses/LICENSE.markdown-it",
+        "sha256": "792c48c5a849a15fdf9e37e8bcf9e6d1dd13b32b46c642a748a0a46a9919d473"
+      }
+    ]
+  },
+  {
+    "name": "mdurl",
+    "version": "0.1.2",
+    "license": "MIT",
+    "scope": "Python distribution only; native libraries require separate review.",
+    "files": [
+      {
+        "path": "mdurl-0.1.2.dist-info/LICENSE",
+        "sha256": "7c605df6e28667a9603118e98274f64a49ce3eed0d26fccce9534a345e0ef955"
+      }
+    ]
+  },
+  {
+    "name": "peewee",
+    "version": "4.0.7",
+    "license": "MIT",
+    "scope": "Python distribution only; native libraries require separate review.",
+    "files": [
+      {
+        "path": "peewee-4.0.7.dist-info/licenses/LICENSE",
+        "sha256": "3740096125b08735a247b8dd08cd82e0ba984d3bebd9221d378576637e5240da"
+      }
+    ]
+  },
+  {
+    "name": "pyinstaller-hooks-contrib",
+    "version": "2026.8",
+    "license": "GPL-2.0-or-later AND Apache-2.0",
+    "scope": "Python distribution only; native libraries require separate review.",
+    "files": [
+      {
+        "path": "pyinstaller_hooks_contrib-2026.8.dist-info/licenses/LICENSE",
+        "sha256": "91d0baaff00773038e72c0a1fc9d5d2d38706b7a2b9c04f34296608f931b9cd0"
+      }
+    ]
+  },
+  {
+    "name": "socksio",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scope": "Python distribution only; native libraries require separate review.",
+    "files": [
+      {
+        "path": "socksio-1.0.0.dist-info/LICENSE",
+        "sha256": "7087f0f5f7c2993f3c4ed117baa3622c1063626e7c692e9ea116475b5fc1396c"
+      }
+    ]
+  }
+]

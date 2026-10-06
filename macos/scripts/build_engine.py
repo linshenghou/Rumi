@@ -30,7 +30,12 @@ def source_fingerprint():
         + [p for p in PACKAGING.rglob("*") if "__pycache__" not in p.parts]
         + [
             PROJECT / "macos/scripts" / name
-            for name in ("build_engine.py", "collect_resources.py")
+            for name in (
+                "build_engine.py",
+                "collect_resources.py",
+                "native_inventory.py",
+                "build_opencv.py",
+            )
         ]
         + [PROJECT / "LICENSE", PROJECT / "pyproject.toml"]
     )
@@ -46,25 +51,31 @@ def run(command, **kwargs):
 
 
 def prepare_python():
+    from build_opencv import install_override
+
     uv = shutil.which("uv")
     if not uv:
         raise SystemExit(
             "Install uv to build the independent engine: https://docs.astral.sh/uv/"
         )
     cache = PROJECT / "macos/.build/uv-cache"
-    if not PYTHON.is_file():
-        run(
-            [
-                uv,
-                "python",
-                "install",
-                PYTHON_VERSION,
-                "--install-dir",
-                MANAGED,
-                "--cache-dir",
-                cache,
-            ]
-        )
+    # The same Python patch version may be rebuilt with different native
+    # dependencies. Pin the archive build and digest as well as 3.13.11.
+    run(
+        [
+            uv,
+            "python",
+            "install",
+            PYTHON_VERSION,
+            "--reinstall",
+            "--python-downloads-json-url",
+            (PACKAGING / "python-downloads.json").as_uri(),
+            "--install-dir",
+            MANAGED,
+            "--cache-dir",
+            cache,
+        ]
+    )
     if not (VENV / "bin/python").exists():
         run([uv, "venv", "--python", PYTHON, VENV, "--cache-dir", cache])
     run(
@@ -80,6 +91,7 @@ def prepare_python():
             cache,
         ]
     )
+    install_override(PYTHON, VENV / "bin/python")
 
 
 def patch(path: Path, old: str, new: str):
@@ -162,16 +174,27 @@ def build_inside_environment(asset_cache: Path, skip_freeze: bool):
         env=environment,
         cwd=BUILD,
     )
+    from native_inventory import create_inventory
+
+    create_inventory(BUILD, ENGINE)
     (ENGINE / "build-manifest.json").write_text(
         json.dumps(
             {
                 "python": PYTHON_VERSION,
+                "python_distribution": json.loads(
+                    (PACKAGING / "python-downloads.json").read_text()
+                ),
                 "architecture": "arm64",
                 "minimum_macos": "14.0",
                 "source_fingerprint": input_fingerprint,
                 "requirements_sha256": hashlib.sha256(
                     (PACKAGING / "requirements.lock").read_bytes()
                 ).hexdigest(),
+                "source_built_overrides": [
+                    json.loads(
+                        (PROJECT / "macos/.build/opencv/manifest.json").read_text()
+                    )
+                ],
             },
             indent=2,
         )

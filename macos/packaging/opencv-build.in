@@ -1,0 +1,8 @@
+# Tools for the source-built image-only OpenCV override. Never shipped as runtime dependencies.
+scikit-build==0.18.1
+setuptools==69.5.1
+wheel==0.45.1
+numpy==2.4.6
+packaging==25.0
+pip==25.3
+distro==1.9.0

@@ -36,6 +36,33 @@ def download(url: str, path: Path):
         shutil.copyfileobj(response, stream)
 
 
+def reviewed_license(distribution):
+    """Resolve missing metadata only against reviewed, content-pinned notices."""
+    declared = distribution.metadata.get(
+        "License-Expression"
+    ) or distribution.metadata.get("License")
+    overrides = json.loads((PACKAGING / "license-overrides.json").read_text())
+    review = next(
+        (
+            r
+            for r in overrides
+            if r["name"].lower() == distribution.metadata["Name"].lower()
+        ),
+        None,
+    )
+    if review:
+        if distribution.version != review["version"]:
+            raise RuntimeError(f"Re-review license after upgrading {review['name']}")
+        for notice in review["files"]:
+            path = Path(distribution.locate_file(notice["path"]))
+            if not path.is_file() or digest(path, "sha256") != notice["sha256"]:
+                raise RuntimeError(f"Reviewed license changed: {review['name']}")
+        return review["license"], "reviewed-notice"
+    if not declared or declared.strip().upper() in {"UNKNOWN", "UNLICENSED"}:
+        raise RuntimeError(f"Missing license review: {distribution.metadata['Name']}")
+    return declared, "package-metadata"
+
+
 def collect_assets(stage: Path, seed: Path):
     package = Path(metadata.distribution("babeldoc").locate_file("babeldoc"))
     info = runpy.run_path(str(package / "assets/embedding_assets_metadata.py"))
@@ -50,12 +77,13 @@ def collect_assets(stage: Path, seed: Path):
                     f"https://raw.githubusercontent.com/funstory-ai/BabelDOC-Assets/main/{group}/{name}",
                 )
             )
+    model = json.loads((PACKAGING / "licenses/DocLayout-provenance.json").read_text())
     planned.append(
         (
             "models",
             "doclayout_yolo_docstructbench_imgsz1024.onnx",
             info["DOCLAYOUT_YOLO_DOCSTRUCTBENCH_IMGSZ1024ONNX_SHA3_256"],
-            info["DOC_LAYOUT_ONNX_MODEL_URL"]["huggingface"],
+            model["source"],
         )
     )
     for name, hash_value in info["TIKTOKEN_CACHES"].items():
@@ -83,6 +111,10 @@ def collect_assets(stage: Path, seed: Path):
             if digest(target) != expected:
                 target.unlink(missing_ok=True)
                 raise RuntimeError(f"Resource checksum failed: {relative}")
+        if group == "models" and digest(target, "sha256") != model["sha256"]:
+            raise RuntimeError(
+                "Model no longer matches the reviewed publisher revision"
+            )
         entries.append(
             {
                 "path": str(relative),
@@ -112,6 +144,8 @@ def collect_licenses(stage: Path):
     from fontTools.ttLib import TTFont
 
     notices = stage / "licenses"
+    if notices.exists():
+        shutil.rmtree(notices)  # Regenerate notices; do not retain removed dependencies.
     notices.mkdir(parents=True, exist_ok=True)
     records = []
     for distribution in sorted(
@@ -135,12 +169,18 @@ def collect_licenses(stage: Path):
                     output.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copyfile(source, output)
                     copied.append(str(output.relative_to(notices)))
+        license_expression, evidence = reviewed_license(distribution)
         records.append(
             {
                 "name": name,
                 "version": distribution.version,
-                "license": distribution.metadata.get("License-Expression")
-                or distribution.metadata.get("License"),
+                "license": license_expression,
+                "license_evidence": evidence,
+                "license_classifiers": [
+                    value
+                    for value in distribution.metadata.get_all("Classifier", [])
+                    if value.startswith("License ::")
+                ],
                 "homepage": distribution.metadata.get("Home-page"),
                 "license_files": copied,
             }
@@ -166,8 +206,23 @@ def collect_licenses(stage: Path):
     for record in json.loads((pinned / "sources.json").read_text()):
         if digest(pinned / record["file"], "sha256") != record["sha256"]:
             raise RuntimeError(f"Vendored license checksum mismatch: {record['file']}")
+    runtime_notices = pinned / "cpython-3.13.11-20251209"
+    runtime_manifest = json.loads((runtime_notices / "manifest.json").read_text())
+    for record in runtime_manifest["files"]:
+        if digest(runtime_notices / record["file"], "sha256") != record["sha256"]:
+            raise RuntimeError(f"Runtime license checksum mismatch: {record['file']}")
     shutil.copytree(pinned, notices / "resource-licenses", dirs_exist_ok=True)
-    # Astral's standalone CPython includes its redistribution licenses in this tree.
+    opencv = PROJECT / "macos/.build/opencv"
+    opencv_manifest = json.loads((opencv / "manifest.json").read_text())
+    for record in opencv_manifest["notices"]:
+        if digest(opencv / "notices" / record["file"], "sha256") != record["sha256"]:
+            raise RuntimeError(f"OpenCV license checksum mismatch: {record['file']}")
+    shutil.copytree(
+        opencv / "notices", notices / "opencv-source-notices", dirs_exist_ok=True
+    )
+    shutil.copyfile(opencv / "manifest.json", notices / "opencv-build.json")
+    # install_only omits upstream's top-level licenses/ directory. The matching
+    # full archive's notices and PYTHON.json above are required as well.
     python_root = Path(sys.base_prefix)
     python_notices = notices / "python-runtime"
     python_notices.mkdir(exist_ok=True)

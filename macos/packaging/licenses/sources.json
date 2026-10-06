@@ -60,11 +60,6 @@
     "sha256": "742665db9c8e1bc72603c6d319ca3e90b83bd6d95202f0cd4ef11068a07a9c29"
   },
   {
-    "file": "DocLayout-ONNX-model-card.md",
-    "url": "https://huggingface.co/wybxc/DocLayout-YOLO-DocStructBench-onnx/raw/main/README.md",
-    "sha256": "ef30e30b57e315278703ddd7baf813df88f1594e2f4c0a8b2696a326a9ce8ad8"
-  },
-  {
     "file": "Apache-2.0.txt",
     "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
     "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
@@ -73,5 +68,35 @@
     "file": "DocLayout-YOLO-upstream-AGPL.txt",
     "url": "https://raw.githubusercontent.com/opendatalab/DocLayout-YOLO/main/LICENSE",
     "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+  },
+  {
+    "file": "DocLayout-ONNX-model-card.md",
+    "url": "https://huggingface.co/wybxc/DocLayout-YOLO-DocStructBench-onnx/raw/ee7c3d744e5c47c58e267044ac825f95abe69653/README.md",
+    "sha256": "ef30e30b57e315278703ddd7baf813df88f1594e2f4c0a8b2696a326a9ce8ad8"
+  },
+  {
+    "file": "DocLayout-original-model-card.md",
+    "url": "https://huggingface.co/juliozhao/DocLayout-YOLO-DocStructBench/raw/8c3299a30b8ff29a1503c4431b035b93220f7b11/README.md",
+    "sha256": "fdd08bd98db905274bb216d72f66154cb1bd5e586232e81228ce3269ebb58534"
+  },
+  {
+    "file": "FreeType-2.13.2-FTL.txt",
+    "url": "https://raw.githubusercontent.com/freetype/freetype/VER-2-13-2/docs/FTL.TXT",
+    "sha256": "08c135755dd589039470f1fdbb400daaabaaa50d0b366d19cebff4d22986baa1"
+  },
+  {
+    "file": "libspatialindex-2.1.0-COPYING.txt",
+    "url": "https://raw.githubusercontent.com/libspatialindex/libspatialindex/2.1.0/COPYING",
+    "sha256": "b63ebfaca9d7ce582580f3e11acabc9d2e37c46ce234533f7fa8a6c7278898a0"
+  },
+  {
+    "file": "OpenSSL-4.0.3-LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/openssl/openssl/openssl-4.0.3/LICENSE.txt",
+    "sha256": "7d5450cb2d142651b8afa315b5f238efc805dad827d91ba367d8516bc9d49e7a"
+  },
+  {
+    "file": "FreeType-2.13.2-LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/freetype/freetype/VER-2-13-2/LICENSE.TXT",
+    "sha256": "2e3bbb7d7c5c396368dd0853a790ec29ce5b8647163dde42a0493fb0d6556b2b"
   }
 ]
