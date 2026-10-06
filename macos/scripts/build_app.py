@@ -130,6 +130,7 @@ def assemble(args):
         (helper / "_internal").rename(resources / "Engine")
         (helper / "_internal").symlink_to("../../Resources/Engine")
         (helper / "build-manifest.json").unlink()
+        (helper / "native-inventory.json").rename(resources / "native-inventory.json")
         shutil.copytree(
             BUILD / "stage/licenses", resources / "ThirdPartyNotices", symlinks=True
         )
