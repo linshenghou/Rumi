@@ -4,7 +4,15 @@
 
 [English](README.md) · [Releases（Beta 准备中）](https://github.com/linshenghou/Rumi/releases) · [安装说明](docs/rumi/INSTALL.md) · [隐私说明](PRIVACY.md) · [贡献指南](CONTRIBUTING.md)
 
-![Rumi PDF 阅读视图的合成文档渲染预览](docs/rumi/images/reader.png)
+<p align="center">
+  <img src="docs/rumi/images/translate-action.png" width="300" alt="Rumi 的再次翻译按钮" />
+</p>
+
+**读论文，按需翻译，随时对照。**
+
+- **导入论文**：拖入 PDF，或粘贴 arXiv 链接。
+- **按需翻译**：选好 API、语言与页码，点击“翻译”。
+- **双语对照**：原文、译文、双语随时切换，需要时导出副本。
 
 ## 社区 Beta
 

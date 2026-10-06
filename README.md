@@ -4,7 +4,15 @@
 
 [简体中文](README.zh-CN.md) · [Releases (beta in preparation)](https://github.com/linshenghou/Rumi/releases) · [Installation](docs/rumi/INSTALL.md) · [Privacy](PRIVACY.md) · [Contributing](CONTRIBUTING.md)
 
-![Rumi PDF reading view rendered with a synthetic demonstration document](docs/rumi/images/reader.png)
+<p align="center">
+  <img src="docs/rumi/images/translate-action.png" width="300" alt="Rumi’s Translate Again action" />
+</p>
+
+**Read. Translate. Compare.**
+
+- **Bring a paper.** Drop in a PDF or paste an arXiv link.
+- **Translate when ready.** Choose your API, language and pages, then click Translate.
+- **Keep both versions close.** Switch between original, translated and bilingual PDFs; export a copy.
 
 ## Community Beta
 
@@ -28,7 +36,7 @@ An upgrade preserves existing paper records. To reuse a key from the earlier PDF
 
 ## Build and contribute
 
-See [build instructions](macos/README.md), [contribution guidelines](CONTRIBUTING.md), [roadmap](docs/rumi/ROADMAP.md), and the [release checklist](docs/rumi/RELEASE_CHECKLIST.md). Tests use a local mock API; contributors need no paid key.
+See [build instructions](docs/rumi/BUILD.md), [contribution guidelines](CONTRIBUTING.md), [roadmap](docs/rumi/ROADMAP.md), and the [release checklist](docs/rumi/RELEASE_CHECKLIST.md). Tests use a local mock API; contributors need no paid key.
 
 Report ordinary bugs in [Issues](https://github.com/linshenghou/Rumi/issues). For vulnerabilities or leaked credentials, follow [SECURITY.md](SECURITY.md) and do not post secrets publicly.
 
