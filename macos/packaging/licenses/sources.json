@@ -1,0 +1,57 @@
+[
+  {
+    "file": "GoNoto-OFL-and-script-Unlicense.txt",
+    "url": "https://raw.githubusercontent.com/satbyy/go-noto-universal/master/UNLICENSE.txt",
+    "sha256": "93b59296492209e4b1a1e573d302eef2f85ac830644c1482f9f80a7c75b0a8ec"
+  },
+  {
+    "file": "SourceHan-OFL.txt",
+    "url": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/LICENSE.txt",
+    "sha256": "fcac737e761ec63dbfbdce11030a1780161920d80315edba9c8beff1c2bac5a2"
+  },
+  {
+    "file": "Noto-OFL.txt",
+    "url": "https://raw.githubusercontent.com/notofonts/noto-fonts/main/LICENSE",
+    "sha256": "0dab92d0544f7b233403f14b84a663bdbfa746982eda629e7f4f9ffe1b036feb"
+  },
+  {
+    "file": "Klee-OFL.txt",
+    "url": "https://raw.githubusercontent.com/fontworks-fonts/Klee/master/OFL.txt",
+    "sha256": "e376b0df8e8a2345a9533db6f0a5333a1107975569ad9d1973a7ee557161ca38"
+  },
+  {
+    "file": "LXGWWenKaiGB-OFL.txt",
+    "url": "https://raw.githubusercontent.com/lxgw/LxgwWenKaiGB/main/OFL.txt",
+    "sha256": "a8aa32c38a3402ba4e40fb6d39c913300dd4a0336290dce5c14e3a2f9308d092"
+  },
+  {
+    "file": "LXGWWenKaiTC-OFL.txt",
+    "url": "https://raw.githubusercontent.com/lxgw/LxgwWenkaiTC/main/OFL.txt",
+    "sha256": "1a13783bf4337242834b60309cdcdbeb566ae3f923576fdbba8b78db9d174def"
+  },
+  {
+    "file": "MaruBuri-upstream-notice.md",
+    "url": "https://raw.githubusercontent.com/fonts-archive/MaruBuri/main/README.md",
+    "sha256": "78b42df05fd35a433c7cec825591fac5608491f164e679802b02be7200facdc8"
+  },
+  {
+    "file": "Adobe-CMap-BSD.txt",
+    "url": "https://raw.githubusercontent.com/adobe-type-tools/cmap-resources/master/LICENSE.md",
+    "sha256": "742665db9c8e1bc72603c6d319ca3e90b83bd6d95202f0cd4ef11068a07a9c29"
+  },
+  {
+    "file": "DocLayout-ONNX-model-card.md",
+    "url": "https://huggingface.co/wybxc/DocLayout-YOLO-DocStructBench-onnx/raw/main/README.md",
+    "sha256": "ef30e30b57e315278703ddd7baf813df88f1594e2f4c0a8b2696a326a9ce8ad8"
+  },
+  {
+    "file": "Apache-2.0.txt",
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "file": "DocLayout-YOLO-upstream-AGPL.txt",
+    "url": "https://raw.githubusercontent.com/opendatalab/DocLayout-YOLO/main/LICENSE",
+    "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+  }
+]

@@ -1,0 +1,31 @@
+name: Bug report / 问题反馈
+description: Report a reproducible Rumi problem without secrets or private papers.
+body:
+  - type: markdown
+    attributes:
+      value: "Security or credential leaks: use SECURITY.md for private reporting. Never paste API keys, personal configuration, or private documents."
+  - type: input
+    id: versions
+    attributes:
+      label: Rumi version, macOS version and chip / 版本与芯片
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps and expected / actual behavior / 复现与预期
+      description: Use a synthetic document or public arXiv identifier you have permission to share.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Error message or screenshot / 错误信息
+      description: Redact keys, document contents and personal paths.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Before submitting / 提交前
+      options:
+        - label: I removed credentials and private document content.
+          required: true

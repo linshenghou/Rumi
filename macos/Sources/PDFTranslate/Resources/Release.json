@@ -1,0 +1,11 @@
+{
+  "product": "Rumi",
+  "version": "0.3.0",
+  "build": "5",
+  "channel": "beta",
+  "beta": 1,
+  "owner": "linshenghou",
+  "repository": "Rumi",
+  "minimum_macos": "14.0",
+  "architecture": "arm64"
+}

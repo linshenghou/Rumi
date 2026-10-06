@@ -1,0 +1,43 @@
+name: Rumi draft release
+on:
+  push:
+    tags: ['v*-beta.*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  safety:
+    uses: ./.github/workflows/source-safety.yml
+  checks:
+    uses: ./.github/workflows/macos-pr.yml
+  draft:
+    needs: [safety, checks]
+    runs-on: macos-15
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a
+      - name: Require the matching tag and clean checkout
+        run: python3 macos/scripts/release_metadata.py --check-release
+      - name: Build candidate from pinned inputs
+        run: python3 macos/scripts/build_app.py --release --dmg --asset-cache artifacts/empty-seed
+      - name: Verify bundled engine and mock translation
+        run: |
+          python3 macos/scripts/verify_engine.py macos/.build/standalone/dist/pdftranslate-engine
+          macos/.build/standalone/venv/bin/python macos/scripts/smoke_engine.py artifacts/macos/Rumi.app/Contents/Helpers/pdftranslate-engine/pdftranslate-engine --work artifacts/release-smoke
+      - name: Scan matching source archive
+        run: |
+          python3 macos/scripts/install_gitleaks.py
+          SOURCE_NAME=$(python3 macos/scripts/release_metadata.py --field source_name)
+          python3 macos/scripts/audit_source.py --history --archive "artifacts/macos/$SOURCE_NAME"
+      - name: Create draft only (manual acceptance before publication)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 macos/scripts/draft_release.py artifacts/macos

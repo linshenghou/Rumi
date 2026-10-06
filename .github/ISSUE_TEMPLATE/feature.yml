@@ -1,0 +1,13 @@
+name: Feature request / 功能建议
+description: Describe the reading or translation problem you want to solve.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and proposed behavior / 问题与建议
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and constraints / 替代方案与约束

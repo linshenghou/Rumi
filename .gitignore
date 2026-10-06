@@ -38,6 +38,7 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+!macos/packaging/engine.spec
 
 # Installer logs
 pip-log.txt
@@ -170,6 +171,17 @@ cython_debug/
 .idea/
 .vscode
 .DS_Store
+macos/.build/
+macos/.swiftpm/
+artifacts/
+*.glossary.csv
+.env.*
+!.env.example
+*.pem
+*.key
+.claude/
+.agents/
+.codex/
 uv.lock
 *.pdf
 *.docx

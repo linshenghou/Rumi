@@ -249,7 +249,10 @@ class DeepSeekSettings(BaseModel):
             openai_base_url="https://api.deepseek.com/v1",
             openai_enable_json_mode=self.deepseek_enable_json_mode,
         )
-        if self.deepseek_model and self.deepseek_model.startswith("deepseek-v4-"):
+        if self.deepseek_model and (
+            self.deepseek_model == "deepseek-flash"
+            or self.deepseek_model.startswith("deepseek-v4-")
+        ):
             if self.deepseek_thinking_mode == "enabled":
                 settings._openai_extra_body = {"thinking": {"type": "enabled"}}
                 if self.deepseek_reasoning_effort:

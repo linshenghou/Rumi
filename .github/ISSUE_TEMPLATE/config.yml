@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Private security report / 私密安全报告
+    url: https://github.com/linshenghou/Rumi/security/advisories/new
+    about: Do not report vulnerabilities or credentials in public issues.

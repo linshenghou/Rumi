@@ -1,0 +1,32 @@
+Rumi app icon — flat blueberry with native glass, v3
+
+Foreground generated with built-in OpenAI image_gen.
+Selected generation: exec-732eaa15-17a8-41b6-873e-04d2b466c07f.png
+Original foreground: BlueberryForeground.png (1254 × 1254, RGBA)
+Production document: RumiIcon.icon
+Production foreground: RumiIcon.icon/Assets/Blueberry.png (1024 × 1024, RGBA)
+Compatibility preview: RumiIcon.png (exported from the compiler's legacy ICNS)
+
+Final generation prompt:
+Use case: style-transfer.
+Create the foreground artwork layer for the macOS app Rumi by radically flattening the attached purple blueberry icon.
+Keep only the IDEA of one purple blueberry and its identifiable five-lobed calyx. REDRAW it as an exquisitely simple TWO-DIMENSIONAL VECTOR-LIKE MARK, viewed straight from the front. One wide gently organic circular disc is the berry. A simple flat five-lobed indigo calyx sits near the upper center, with rounded lobes and a small central aperture. The calyx must read as a blueberry crown, not a decorative sparkle. Very few shapes, elegant optical balance, recognizable at 32 pixels.
+The berry's front face is a smooth, nearly uniform luminous lavender-purple with a very subtle broad two-color transition to violet. Its entire center must stay light enough to read as translucent tinted glass later. The calyx is one darker translucent violet plane, also flat. No sphere, no inflated balloon, no photorealistic fruit, no bevel, no volume shading, no glossy white spot, no 3D render, no cast shadow. The visual reference to glass is clean luminous color and layered translucency only. Native Apple tooling will add the glass lighting later.
+Transparent background. REMOVE the rounded-square background tile completely. There is no tile, no frame, no rim, no border, no white background. Deliver only the standalone flat blueberry mark on genuine alpha transparency, centered, about 76% of a square canvas. Smooth exact contour, no speckles, no grain. No leaf, stem, words or extra fruit. High-resolution square PNG at least 1024 pixels.
+
+Native composition:
+- Full-bleed opaque purple gradient background. No pre-masked or inset background tile.
+- Flat generated blueberry PNG as a separate foreground layer.
+- Neutral shadow opacity 0.12, translucency enabled with value 0.30.
+- Rounded mask, specular material and appearance variants compiled by Apple's actool.
+- Native AppKit resizing only; generated foreground alpha preserved.
+- Assets.car contains the native layered icon. ICNS is the compiler-generated compatibility fallback.
+- Info.plist uses both CFBundleIconName and CFBundleIconFile from the compiler.
+
+Primary design and packaging references:
+https://developer.apple.com/design/human-interface-guidelines/app-icons
+https://developer.apple.com/documentation/xcode/creating-your-app-icon-using-icon-composer
+https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass
+https://docs-assets.developer.apple.com/published/1bbbd245213e/ConfiguringYourAppToUseAlternateAppIcons.zip
+
+The Icon Composer document structure follows Apple's sample. The artwork is original, not copied from the sample.

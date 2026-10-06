@@ -3,6 +3,7 @@ from __future__ import annotations
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import pytest
 from pdf2zh_next.config.model import SettingsModel
 from pdf2zh_next.config.translate_engine_model import DeepSeekSettings
 from pdf2zh_next.translator.translator_impl.openai import OpenAITranslator
@@ -48,7 +49,9 @@ def build_deepseek_settings(
     return settings
 
 
-def build_translator(settings: SettingsModel) -> tuple[OpenAITranslator, FakeOpenAIClient]:
+def build_translator(
+    settings: SettingsModel,
+) -> tuple[OpenAITranslator, FakeOpenAIClient]:
     fake_client = FakeOpenAIClient()
     with patch(
         "pdf2zh_next.translator.translator_impl.openai.openai.OpenAI",
@@ -58,8 +61,11 @@ def build_translator(settings: SettingsModel) -> tuple[OpenAITranslator, FakeOpe
     return translator, fake_client
 
 
-def test_deepseek_v4_unforced_omits_extra_body_and_reasoning_effort():
-    settings = build_deepseek_settings("deepseek-v4-flash")
+@pytest.mark.parametrize(
+    "model", ["deepseek-flash", "deepseek-v4-flash", "deepseek-v4-pro"]
+)
+def test_deepseek_unforced_omits_extra_body_and_reasoning_effort(model):
+    settings = build_deepseek_settings(model)
     translator, fake_client = build_translator(settings)
 
     translator.do_translate("hello")
@@ -69,9 +75,12 @@ def test_deepseek_v4_unforced_omits_extra_body_and_reasoning_effort():
     assert "reasoning_effort" not in request_kwargs
 
 
-def test_deepseek_v4_disabled_sends_extra_body_without_reasoning_effort():
+@pytest.mark.parametrize(
+    "model", ["deepseek-flash", "deepseek-v4-flash", "deepseek-v4-pro"]
+)
+def test_deepseek_disabled_sends_extra_body_without_reasoning_effort(model):
     settings = build_deepseek_settings(
-        "deepseek-v4-flash",
+        model,
         thinking_mode="disabled",
         reasoning_effort="max",
     )
@@ -84,9 +93,12 @@ def test_deepseek_v4_disabled_sends_extra_body_without_reasoning_effort():
     assert "reasoning_effort" not in request_kwargs
 
 
-def test_deepseek_v4_enabled_sends_extra_body_and_configured_effort():
+@pytest.mark.parametrize(
+    "model", ["deepseek-flash", "deepseek-v4-flash", "deepseek-v4-pro"]
+)
+def test_deepseek_enabled_sends_extra_body_and_configured_effort(model):
     settings = build_deepseek_settings(
-        "deepseek-v4-flash",
+        model,
         thinking_mode="enabled",
         reasoning_effort="high",
     )
@@ -99,8 +111,11 @@ def test_deepseek_v4_enabled_sends_extra_body_and_configured_effort():
     assert request_kwargs["reasoning_effort"] == "high"
 
 
-def test_deepseek_v4_enabled_without_effort_omits_reasoning_effort():
-    settings = build_deepseek_settings("deepseek-v4-flash", thinking_mode="enabled")
+@pytest.mark.parametrize(
+    "model", ["deepseek-flash", "deepseek-v4-flash", "deepseek-v4-pro"]
+)
+def test_deepseek_enabled_without_effort_omits_reasoning_effort(model):
+    settings = build_deepseek_settings(model, thinking_mode="enabled")
     translator, fake_client = build_translator(settings)
 
     translator.do_translate("hello")

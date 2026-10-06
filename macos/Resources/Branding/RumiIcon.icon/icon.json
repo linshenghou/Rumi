@@ -1,0 +1,29 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "srgb:0.32941,0.17255,0.53333,1.00000",
+      "srgb:0.12549,0.06667,0.25490,1.00000"
+    ]
+  },
+  "groups": [
+    {
+      "layers": [
+        {
+          "image-name": "Blueberry.png",
+          "name": "Blueberry"
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.12
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.3
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

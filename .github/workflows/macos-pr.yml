@@ -1,0 +1,40 @@
+name: macOS PR checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+permissions:
+  contents: read
+concurrency:
+  group: macos-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  desktop:
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a
+      - name: Check Apple Silicon and toolchain
+        run: |
+          test "$(uname -m)" = arm64
+          xcodebuild -version
+      - name: Swift tests
+        run: swift test --disable-sandbox --package-path macos
+      - name: Compile layered and legacy icons
+        run: python3 macos/scripts/build_icon.py macos/Resources/Branding/RumiIcon.icon artifacts/icon --scratch macos/.build/icon
+      - name: Build pinned standalone engine
+        run: python3 macos/scripts/build_engine.py --asset-cache artifacts/empty-seed
+      - name: Bridge and release guards
+        run: |
+          uv pip install --python macos/.build/standalone/venv/bin/python pytest==8.3.5
+          macos/.build/standalone/venv/bin/python -m pytest tests/test_desktop_bridge.py tests/test_release_packaging.py
+      - name: Relocation, native dependencies and cache repair
+        run: python3 macos/scripts/verify_engine.py macos/.build/standalone/dist/pdftranslate-engine
+      - name: Local mock API translation (no paid key)
+        run: macos/.build/standalone/venv/bin/python macos/scripts/smoke_engine.py macos/.build/standalone/dist/pdftranslate-engine/pdftranslate-engine --work artifacts/mock-api
