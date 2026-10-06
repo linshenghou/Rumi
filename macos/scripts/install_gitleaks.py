@@ -7,15 +7,15 @@ from pathlib import Path
 
 from collect_resources import download
 
-VERSION = "8.24.2"
+VERSION = "8.30.1"
 HASHES = {
     ("Darwin", "arm64"): (
         "darwin_arm64",
-        "90d13686937ac7429b97a3acbf1e1d0ce90d92ae2d0cf46a690bd8ae5230bea0",
+        "b40ab0ae55c505963e365f271a8d3846efbc170aa17f2607f13df610a9aeb6a5",
     ),
     ("Linux", "x86_64"): (
         "linux_x64",
-        "fa0500f6b7e41d28791ebc680f5dd9899cd42b58629218a5f041efa899151a8e",
+        "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
     ),
 }
 
