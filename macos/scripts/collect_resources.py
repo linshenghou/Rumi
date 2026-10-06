@@ -127,7 +127,7 @@ def collect_licenses(stage: Path):
         for file in distribution.files or []:
             if any(
                 token in file.name.lower()
-                for token in ("license", "copying", "notice", "copyright")
+                for token in ("license", "licence", "copying", "notice", "copyright")
             ):
                 source = Path(distribution.locate_file(file))
                 if source.is_file() and ".." not in file.parts:
@@ -173,7 +173,7 @@ def collect_licenses(stage: Path):
     python_notices.mkdir(exist_ok=True)
     for source in python_root.rglob("*"):
         if source.is_file() and source.name.lower().startswith(
-            ("license", "copying", "notice")
+            ("license", "licence", "copying", "notice")
         ):
             relative = source.relative_to(python_root)
             output = python_notices / relative

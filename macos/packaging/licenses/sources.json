@@ -1,5 +1,20 @@
 [
   {
+    "file": "Flatbuffers-25.12.19-Apache-2.0.txt",
+    "url": "https://raw.githubusercontent.com/google/flatbuffers/v25.12.19/LICENSE",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "file": "tqdm-4.70.1-LICENCE.txt",
+    "url": "https://raw.githubusercontent.com/tqdm/tqdm/v4.70.1/LICENCE",
+    "sha256": "fcff87c3a47ce8028a8512aa182d4fcf0ad1c90544ee75cf9b343684cac194de"
+  },
+  {
+    "file": "MPL-2.0.txt",
+    "url": "https://www.mozilla.org/media/MPL/2.0/index.815ca599c9df.txt",
+    "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85"
+  },
+  {
     "file": "GoNoto-OFL-and-script-Unlicense.txt",
     "url": "https://raw.githubusercontent.com/satbyy/go-noto-universal/master/UNLICENSE.txt",
     "sha256": "93b59296492209e4b1a1e573d302eef2f85ac830644c1482f9f80a7c75b0a8ec"
@@ -33,6 +48,11 @@
     "file": "MaruBuri-upstream-notice.md",
     "url": "https://raw.githubusercontent.com/fonts-archive/MaruBuri/main/README.md",
     "sha256": "78b42df05fd35a433c7cec825591fac5608491f164e679802b02be7200facdc8"
+  },
+  {
+    "file": "NAVER-font-OFL.txt",
+    "url": "https://help.naver.com/service/30016/contents/18088?osType=PC&lang=ko",
+    "sha256": "838c969e585b12e97746f426b998e7f722a7e3bad4aeafb215f5eaf1e90d87d0"
   },
   {
     "file": "Adobe-CMap-BSD.txt",
