@@ -191,6 +191,8 @@
 "The translation component did not receive the request. Try again." = "翻译组件未能接收请求，请重试。";
 "The translation component is missing. Reinstall the app." = "翻译组件缺失，请重新安装应用。";
 "The translation engine could not start. Check it again." = "翻译引擎未能启动，请重试检查。";
+"This translation component is incompatible with Rumi. Reinstall the app, then check again." = "翻译组件与当前 Rumi 版本不兼容，请重新安装应用后再次检查。";
+"Translation did not produce all requested readable PDFs. Your original and previous results have been kept. Try again." = "未能生成所选版本的有效 PDF，原文和已有译文已保留，请重试。";
 "The translation engine or its resources are missing or damaged. Reinstall the app." = "翻译引擎或资源缺失、损坏，请重新安装应用。";
 "The translation engine stopped. You can try again." = "翻译引擎已停止，可以重试。";
 "The translation request is invalid. Try again." = "翻译请求无效，请重试。";

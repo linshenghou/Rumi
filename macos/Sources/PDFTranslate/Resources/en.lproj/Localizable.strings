@@ -191,6 +191,8 @@
 "The translation component did not receive the request. Try again." = "The translation component did not receive the request. Try again.";
 "The translation component is missing. Reinstall the app." = "The translation component is missing. Reinstall the app.";
 "The translation engine could not start. Check it again." = "The translation engine could not start. Check it again.";
+"This translation component is incompatible with Rumi. Reinstall the app, then check again." = "This translation component is incompatible with Rumi. Reinstall the app, then check again.";
+"Translation did not produce all requested readable PDFs. Your original and previous results have been kept. Try again." = "Translation did not produce all requested readable PDFs. Your original and previous results have been kept. Try again.";
 "The translation engine or its resources are missing or damaged. Reinstall the app." = "The translation engine or its resources are missing or damaged. Reinstall the app.";
 "The translation engine stopped. You can try again." = "The translation engine stopped. You can try again.";
 "The translation request is invalid. Try again." = "The translation request is invalid. Try again.";

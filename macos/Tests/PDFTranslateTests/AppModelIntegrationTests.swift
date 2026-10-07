@@ -199,6 +199,131 @@ final class AppModelIntegrationTests: XCTestCase {
         XCTAssertFalse(model.checking); XCTAssertFalse(model.running)
     }
 
+    func testIncompatibleOrMissingProtocolKeepsQueueAndRecoversAfterRepair() async throws {
+        for ready in [#"{"type":"ready","protocol_version":1}"#,
+                      #"{"type":"ready","protocol_version":3}"#,
+                      #"{"type":"ready"}"#] {
+            let fixture = try makeFixture()
+            let model = fixture.model
+            let events = fixture.root.appendingPathComponent("check-events.json")
+            try Data("[\(ready)]".utf8).write(to: events)
+            let document = try job("retry", in: fixture)
+            model.jobs = [document]; model.selection = [document.id]
+            model.requestTranslation()
+            try await eventually("incompatible check exits") { !model.checking }
+            XCTAssertFalse(model.engineReady)
+            XCTAssertFalse(fixture.started("retry"))
+            XCTAssertEqual(model.jobs[0].status, .queued)
+            XCTAssertEqual(model.notice, L10n.text("This translation component is incompatible with Rumi. Reinstall the app, then check again."))
+            try FileManager.default.removeItem(at: events)
+            model.checkEngine()
+            try await eventually("compatible component resumes queue") { model.jobs[0].progress == 42 }
+            XCTAssertNil(model.notice)
+            try fixture.release("retry")
+            try await eventually("repaired translation completes") { !model.hasWork }
+            XCTAssertEqual(model.jobs[0].status, .completed)
+        }
+    }
+
+    func testReadyCannotLaunchTranslationBeforeSuccessfulCheckExit() async throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        let wait = fixture.root.appendingPathComponent("check-wait")
+        try Data().write(to: wait)
+        try Data().write(to: fixture.root.appendingPathComponent("check-fails"))
+        model.checkEngine()
+        try await eventually("ready is consumed while helper remains alive") {
+            // The error follows ready on the same pipe, proving both were delivered.
+            model.notice == "Fixture check is still running"
+        }
+        XCTAssertTrue(model.checking)
+        XCTAssertFalse(model.engineReady)
+        let document = try job("during-check", in: fixture)
+        model.jobs = [document]; model.selection = [document.id]
+        model.requestTranslation()
+        XCTAssertFalse(model.running)
+        XCTAssertEqual(model.jobs[0].status, .queued)
+        try FileManager.default.removeItem(at: wait)
+        try await eventually("failed check exits") { !model.checking }
+        XCTAssertFalse(model.engineReady)
+        XCTAssertFalse(fixture.started("during-check"))
+    }
+
+    func testCheckErrorCannotBeOverriddenByReadyAndZeroExit() async throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        try Data(#"[{"type":"error","code":"engine"},{"type":"ready","protocol_version":2}]"#.utf8)
+            .write(to: fixture.root.appendingPathComponent("check-events.json"))
+        let document = try job("check-error", in: fixture)
+        model.jobs = [document]; model.selection = [document.id]
+        model.requestTranslation()
+        try await eventually("contradictory check exits") { !model.checking }
+        XCTAssertFalse(model.engineReady)
+        XCTAssertEqual(model.jobs[0].status, .queued)
+        XCTAssertFalse(fixture.started("check-error"))
+        XCTAssertEqual(model.notice, L10n.text("The translation engine or its resources are missing or damaged. Reinstall the app."))
+    }
+
+    func testSuccessfulEngineCheckDoesNotDismissHistoryWarning() async throws {
+        let fixture = try makeFixture()
+        let model = fixture.model
+        let warning = L10n.text("History could not be read. The original file has been preserved and will not be overwritten.")
+        model.notice = warning
+        model.checkEngine()
+        XCTAssertEqual(model.notice, warning)
+        try await eventually("successful check exits") { !model.checking }
+        XCTAssertTrue(model.engineReady)
+        XCTAssertEqual(model.notice, warning)
+    }
+
+    func testIncompleteOrUnreadableFinishPreservesPreviousPDFsAndReadingPosition() async throws {
+        for kind in ["absent", "empty", "missing", "corrupt", "incomplete"] {
+            let fixture = try makeFixture()
+            let model = fixture.model
+            try Data(kind.utf8).write(to: fixture.root.appendingPathComponent("finish-kind"))
+            var document = try job("retry", in: fixture)
+            let original = try Data(contentsOf: document.input)
+            let previous = try paper("previous-success.pdf", in: fixture.root)
+            let previousData = try Data(contentsOf: previous)
+            document.status = .completed
+            document.outputs = ["mono_pdf_path": previous.path, "dual_pdf_path": previous.path]
+            document.readingPositions["translated"] = ReadingPosition(pageIndex: 0, scaleFactor: 1.5, autoScales: false)
+            model.jobs = [document]; model.selection = [document.id]
+            model.requestTranslation()
+            try await eventually("retry starts") { model.jobs[0].progress == 42 }
+            try fixture.release("retry")
+            try await eventually("invalid finish exits") { !model.running }
+            XCTAssertEqual(model.jobs[0].status, .failed, kind)
+            XCTAssertEqual(model.jobs[0].outputs, document.outputs, kind)
+            XCTAssertEqual(model.jobs[0].readingPositions["translated"], document.readingPositions["translated"], kind)
+            XCTAssertEqual(model.jobs[0].error, L10n.text("Translation did not produce all requested readable PDFs. Your original and previous results have been kept. Try again."))
+            XCTAssertEqual(try Data(contentsOf: previous), previousData)
+            XCTAssertEqual(try Data(contentsOf: document.input), original)
+            model.selectVariant(.translated)
+            XCTAssertEqual(model.selectedJob?.url(for: model.variant), previous)
+        }
+    }
+
+    func testSingleVariantTranslationAcceptsOnlyRequestedOutput() async throws {
+        for mode in ["mono", "dual"] {
+            let fixture = try makeFixture()
+            let model = fixture.model
+            var document = try job(mode, in: fixture)
+            var preferences = model.preferences
+            preferences.mode = mode
+            try model.apply(preferences, apiKey: "original-fixture-key")
+            document.mode = mode
+            model.jobs = [document]; model.selection = [document.id]
+            model.requestTranslation()
+            try await eventually("single variant starts") { model.jobs[0].progress == 42 }
+            try fixture.release(mode)
+            try await eventually("single variant completes") { !model.hasWork }
+            XCTAssertEqual(model.jobs[0].status, .completed)
+            XCTAssertEqual(model.jobs[0].outputs.count, 1)
+            XCTAssertEqual(model.variant, mode == "mono" ? .translated : .bilingual)
+        }
+    }
+
     func testQuitCancelsActiveAndWaitingJobsBeforeAfterStop() async throws {
         let fixture = try makeFixture()
         let model = fixture.model
@@ -289,7 +414,12 @@ final class AppModelIntegrationTests: XCTestCase {
             output.write(json.dumps(value)+'\n')
     record('begin')
     if operation == 'check':
-        emit({'type':'ready','protocol_version':2})
+        events = root/'check-events.json'
+        for event in (json.loads(events.read_text()) if events.exists() else [{'type':'ready','protocol_version':2}]):
+            emit(event)
+        if (root/'check-wait').exists():
+            emit({'type':'error','message':'Fixture check is still running'})
+            while (root/'check-wait').exists(): time.sleep(0.01)
         record('exit')
         sys.exit(1 if (root/'check-fails').exists() else 0)
     if operation == 'test_connection':
@@ -322,7 +452,16 @@ final class AppModelIntegrationTests: XCTestCase {
     dual = output/'fixture-dual.pdf'
     shutil.copyfile(request['input'], mono)
     shutil.copyfile(request['input'], dual)
-    emit({'type':'finish','outputs':{'mono_pdf_path':str(mono),'dual_pdf_path':str(dual)}})
+    outputs = {}
+    if request.get('mode') != 'dual': outputs['mono_pdf_path'] = str(mono)
+    if request.get('mode') != 'mono': outputs['dual_pdf_path'] = str(dual)
+    kind = root/'finish-kind'
+    kind = kind.read_text() if kind.exists() else ''
+    if kind == 'empty': outputs = {}
+    elif kind == 'missing': dual.unlink()
+    elif kind == 'corrupt': dual.write_text('Fixture invalid PDF')
+    elif kind == 'incomplete': outputs.pop('dual_pdf_path')
+    emit({'type':'finish'} if kind == 'absent' else {'type':'finish','outputs':outputs})
     # A finish event is not process exit. The queue must wait before starting next.
     time.sleep(0.05)
     record('exit')

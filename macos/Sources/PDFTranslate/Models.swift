@@ -222,7 +222,10 @@ struct BackendRequest: Encodable {
 }
 
 struct BridgeEvent: Decodable {
+    // Keep in sync with PROTOCOL_VERSION in pdf2zh_next/desktop_bridge.py.
+    static let supportedProtocolVersion = 2
     var type: String
+    var protocolVersion: Int?
     var stage: String?
     var overallProgress: Double?
     var outputs: [String: String]?
@@ -247,6 +250,7 @@ struct BridgeEvent: Decodable {
     }
     enum CodingKeys: String, CodingKey {
         case type, stage, outputs, message, code, provider
+        case protocolVersion = "protocol_version"
         case overallProgress = "overall_progress"
     }
 }

@@ -34,6 +34,7 @@ final class AppModel: ObservableObject {
 
     private var session: BackendSession?
     private var checkSession: BackendSession?
+    private var engineCheckNotice: String?
     private var serviceSession: BackendSession?
     private var queuedProviders: [UUID: ProviderRequest] = [:]
     private var activeID: UUID?
@@ -262,18 +263,36 @@ final class AppModel: ObservableObject {
     func checkEngine() {
         guard !checking else { return }
         checking = true; engineReady = false
+        if notice == engineCheckNotice { notice = nil }
+        engineCheckNotice = nil
+        var receivedReady = false
+        var checkFailed = false
         checkSession = BackendSession(request: BackendRequest(operation: "check"), command: runtimeCommand, onEvent: { [weak self] event in
-            if event.type == "ready" { self?.engineReady = true }
-            else if event.type == "error" { self?.notice = event.localizedMessage }
+            if event.type == "ready" {
+                if event.protocolVersion == BridgeEvent.supportedProtocolVersion { receivedReady = true }
+                else {
+                    checkFailed = true
+                    self?.reportEngineCheckFailure(L10n.text("This translation component is incompatible with Rumi. Reinstall the app, then check again."))
+                }
+            } else if event.type == "error" {
+                checkFailed = true
+                self?.reportEngineCheckFailure(event.localizedMessage)
+            }
         }, onExit: { [weak self] code in
             guard let self else { return }
             self.checking = false; self.checkSession = nil
-            if code != 0 { self.engineReady = false }
-            if !self.engineReady { self.notice = self.notice ?? L10n.text("The translation engine could not start. Check it again.") }
+            // A ready event alone is insufficient: the check can still fail on exit.
+            self.engineReady = code == 0 && receivedReady && !checkFailed
+            if !self.engineReady { self.reportEngineCheckFailure(self.engineCheckNotice) }
             else { self.startNext() }
         })
         do { try checkSession?.start() }
-        catch { checking = false; checkSession = nil; notice = error.localizedDescription }
+        catch { checking = false; checkSession = nil; reportEngineCheckFailure(error.localizedDescription) }
+    }
+
+    private func reportEngineCheckFailure(_ message: String?) {
+        engineCheckNotice = message ?? L10n.text("The translation engine could not start. Check it again.")
+        notice = engineCheckNotice
     }
 
     func add(_ urls: [URL]) {
@@ -472,7 +491,12 @@ final class AppModel: ObservableObject {
         guard let index = jobs.firstIndex(where: { $0.id == id }), jobs[index].status == .running else { return }
         switch event.type {
         case "finish":
-            jobs[index].outputs = event.outputs ?? [:]; jobs[index].progress = 100
+            guard let outputs = event.outputs, hasReadableOutputs(outputs, for: jobs[index]) else {
+                jobs[index].status = .failed; jobs[index].stage = jobs[index].status.label
+                jobs[index].error = L10n.text("Translation did not produce all requested readable PDFs. Your original and previous results have been kept. Try again.")
+                save(); return
+            }
+            jobs[index].outputs = outputs; jobs[index].progress = 100
             jobs[index].status = .completed; jobs[index].stage = L10n.text("Translation complete")
             jobs[index].readingPositions.removeValue(forKey: DocumentVariant.translated.rawValue)
             jobs[index].readingPositions.removeValue(forKey: DocumentVariant.bilingual.rawValue)
@@ -486,6 +510,22 @@ final class AppModel: ObservableObject {
         default:
             if let stage = event.stage { jobs[index].stage = readableStage(stage) }
             if let progress = event.overallProgress, progress.isFinite { jobs[index].progress = min(99.9, max(jobs[index].progress, progress)) }
+        }
+    }
+
+    private func hasReadableOutputs(_ outputs: [String: String], for job: TranslationJob) -> Bool {
+        var result = job
+        result.outputs = outputs
+        let urls: [URL?]
+        switch job.mode {
+        case "mono": urls = [result.mono]
+        case "dual": urls = [result.dual]
+        default: urls = [result.mono, result.dual]
+        }
+        return urls.allSatisfy { url in
+            guard let url, FileManager.default.isReadableFile(atPath: url.path),
+                  let document = PDFDocument(url: url), !document.isLocked else { return false }
+            return document.pageCount > 0
         }
     }
 

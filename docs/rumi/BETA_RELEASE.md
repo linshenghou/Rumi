@@ -7,6 +7,7 @@ A free, open-source macOS paper reader and translator for Apple Silicon, macOS 1
 ## Changes
 
 - Native PDF and arXiv import, translation queues, original/translated/bilingual reading and export.
+- Engine compatibility checks before translation; incomplete or unreadable new PDFs leave previous results available.
 - Standalone Python engine with bundled fonts and layout model; no Python install or first-run model download.
 - Image-only OpenCV built from pinned source, with unused video libraries removed; native dependency inventory and additional runtime/source notices.
 - English and Simplified Chinese interface and community documentation.
