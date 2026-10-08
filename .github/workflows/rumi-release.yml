@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: astral-sh/setup-uv@ed21f2f24f8dd64503750218de024bcf64c7250a
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
       - name: Require the matching tag and clean checkout
         run: python3 macos/scripts/release_metadata.py --check-release
       - name: Build candidate from pinned inputs
