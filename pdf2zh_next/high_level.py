@@ -136,11 +136,14 @@ def _translate_wrapper(
         # (cache race), producing many popups. Pre-filling the cache
         # prevents the subprocess call entirely.
         import sys
+
         if sys.platform == "win32":
             try:
                 import joblib.externals.loky.backend.context as _loky_ctx
+
                 if _loky_ctx.physical_cores_cache is None:
                     import os
+
                     _loky_ctx.physical_cores_cache = os.cpu_count()
                     logger.info(
                         "Pre-filled loky physical_cores_cache=%d to prevent "
