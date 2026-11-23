@@ -145,7 +145,9 @@ def collect_licenses(stage: Path):
 
     notices = stage / "licenses"
     if notices.exists():
-        shutil.rmtree(notices)  # Regenerate notices; do not retain removed dependencies.
+        shutil.rmtree(
+            notices
+        )  # Regenerate notices; do not retain removed dependencies.
     notices.mkdir(parents=True, exist_ok=True)
     records = []
     for distribution in sorted(

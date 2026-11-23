@@ -12,7 +12,7 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[2]
 DESTINATION = PROJECT / "docs/rumi/images"
 
-RENDERER = r'''
+RENDERER = r"""
 // Only the accessibility-format helper is needed by TranslationAction here.
 enum L10n {
     static func format(_ key: String, _ arguments: CVarArg...) -> String {
@@ -54,7 +54,7 @@ struct ExportReadmeAssets {
         print(url.lastPathComponent)
     }
 }
-'''
+"""
 
 
 def main():
